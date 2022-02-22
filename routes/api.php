@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\v1\Admin\ProductController;
 use App\Http\Controllers\API\v1\Admin\UserController;
 use App\Http\Controllers\API\v1\AdminAuthController;
 use App\Http\Controllers\API\v1\AuthController;
@@ -43,5 +44,15 @@ Route::group(['prefix' => 'v1/admin', 'namespace' => 'api\v1'], function() {
             return response()->json(['success' => true, 'user' => auth()->user()]);
         });
         Route::get('/user-listing', [UserController::class, 'index']);
+    });
+});
+
+Route::group(['prefix' => 'v1', 'namespace' => 'api\v1'], function() {
+    Route::group(['prefix' =>  'product'], function() {
+        Route::middleware(['api', 'admin'])->group(function(){
+            Route::post('create', [ProductController::class, 'store']);
+            Route::get('', [ProductController::class, 'index']);
+            Route::get('/{uuid}', [ProductController::class, 'show']);
+        });
     });
 });
